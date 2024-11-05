@@ -35,4 +35,5 @@ rm -rf "$ROOT/laravel-docs-zh"
 wget https://raw.githubusercontent.com/ElfSundae/build-laravel.com/master/build-laravel.com -O "$ROOT/build-laravel.com"
 chmod +x "$ROOT/build-laravel.com"
 
-"$ROOT"/build-laravel.com "$WEBROOT" --root-url="https://$DOMAIN" $OPTIONS "$@"
+set -x
+bash "$ROOT/build-laravel.com" "$WEBROOT" --root-url="https://$DOMAIN" $OPTIONS "$@"
