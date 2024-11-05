@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  schedule:
+    - cron: '30 */4 * * *'
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: ./build.sh laravel.0x123.com
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
+
+
+# https://vercel.com/guides/how-can-i-use-github-actions-with-vercel
+
+# vercel deploy --archive=tgz
