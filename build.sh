@@ -52,6 +52,7 @@ rm -f "$WEBROOT/public/.htaccess"
 rm -f "$WEBROOT/public/index.php"
 rm -f "$WEBROOT/public/web.config"
 
-mv "$WEBROOT/public" "$ROOT/public"
+rm -rf "$ROOT/public"
+mv "$WEBROOT/public" "$ROOT"
 
 rm -rf "$WEBROOT"
