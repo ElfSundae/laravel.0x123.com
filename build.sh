@@ -40,6 +40,8 @@ chmod +x "$ROOT/build-laravel.com"
 
 (set -x; bash "$ROOT/build-laravel.com" "$WEBROOT" --root-url="https://$DOMAIN" $OPTIONS "$@")
 
+rm -rf "$ROOT/build-laravel.com"
+
 # Process the static website
 original_storage=$(readlink "$WEBROOT/public/storage")
 rm "$WEBROOT/public/storage"
