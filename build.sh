@@ -2,6 +2,8 @@
 set -euo pipefail
 
 ROOT=$(realpath "$(dirname "$0")")
+WEBROOT="$ROOT/webroot"
+
 DOMAIN="laravel.com"
 REPO="https://github.com/ElfSundae/laravel.com.git"
 BRANCH="master"
@@ -12,11 +14,11 @@ if [[ -n ${1:-} ]]; then
     shift
 fi
 
-WEBROOT="$ROOT/$DOMAIN"
-
+# Clone laravel website
 rm -rf "$WEBROOT"
 git clone $REPO --depth=1 -b $BRANCH "$WEBROOT"
 
+# Download the Chinese docs
 rm -rf "$ROOT/laravel-docs-zh"
 git clone "https://${GITHUB_TOKEN}@github.com/ElfSundae/laravel-docs-zh.git" "$ROOT/laravel-docs-zh"
 
@@ -32,8 +34,24 @@ git -C "$ROOT/laravel-docs-zh" for-each-ref --shell --format="version=%(refname:
     done
 rm -rf "$ROOT/laravel-docs-zh"
 
+# Build website
 wget https://raw.githubusercontent.com/ElfSundae/build-laravel.com/master/build-laravel.com -O "$ROOT/build-laravel.com"
 chmod +x "$ROOT/build-laravel.com"
 
-set -x
-bash "$ROOT/build-laravel.com" "$WEBROOT" --root-url="https://$DOMAIN" $OPTIONS "$@"
+(set -x; bash "$ROOT/build-laravel.com" "$WEBROOT" --root-url="https://$DOMAIN" $OPTIONS "$@")
+
+# Process the static website
+original_storage=$(readlink "$WEBROOT/public/storage")
+rm "$WEBROOT/public/storage"
+mv "$original_storage" "$WEBROOT/public/storage"
+
+mv "$WEBROOT/public/storage/site-cache/"* "$WEBROOT/public"
+rm -rf "$WEBROOT/public/storage/site-cache"
+
+rm -f "$WEBROOT/public/.htaccess"
+rm -f "$WEBROOT/public/index.php"
+rm -f "$WEBROOT/public/web.config"
+
+mv "$WEBROOT/public" "$ROOT/public"
+
+rm -rf "$WEBROOT"

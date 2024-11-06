@@ -1,6 +1,6 @@
-/laravel.com
-/laravel.0x123.com
-/laravel-docs-zh
+/webroot
+/laravel-docs-*
 /build-laravel.com
+/public
 .vercel
 .env*.local
